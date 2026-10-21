@@ -155,10 +155,25 @@ class VectorStudio:
         return payload.get("result")
 
     def events(self) -> Iterator[dict[str, Any]]:
-        """Stream broker events (document revisions, session changes)."""
+        """Stream broker events.
+
+        Vector Studio 0.1.11 does not implement the event route (it answers
+        404), so this raises a clear error instead of hanging. Poll `inspect`
+        or `session.list` for the current revision on those builds.
+        """
         url = f"http://127.0.0.1:{self.port()}{EVENTS_PATH}"
         request = urllib.request.Request(url, headers=self._headers(), method="GET")
-        with urllib.request.urlopen(request, timeout=self.timeout) as response:
+        try:
+            response = urllib.request.urlopen(request, timeout=self.timeout)
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                raise VectorStudioError(
+                    "this Vector Studio build does not expose an event stream; "
+                    "poll inspect or session.list for the revision",
+                    "EVENTS_UNSUPPORTED",
+                ) from exc
+            raise VectorStudioError(f"HTTP {exc.code}", f"HTTP_{exc.code}") from exc
+        with response:
             for line in response:
                 line = line.strip()
                 if not line:

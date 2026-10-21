@@ -83,8 +83,14 @@ python3 tests/e2e_live.py                # needs a running Vector Studio
 
 `tests/e2e_live.py` was used to confirm the recovered protocol against the real
 application: `capabilities` (16 operations), `describe`, `session.list`, the
-`UNKNOWN_OPERATION` error path, and a full MCP handshake plus `tools/list` and
-`tools/call`.
+`UNKNOWN_OPERATION` error path, the absent event stream, the missing-credential
+path, and a full MCP handshake plus `tools/list` and `tools/call`.
+
+Manual probes against a live broker confirmed the transport rules too: an
+`Origin` header, a mismatched `Host` or a wrong bearer token each answer
+`401`; a body over 1 MiB answers `413`; a `version: 2` envelope answers
+`INVALID_INPUT`; and `GET /api/v1/automation/events` answers `404` - that
+route is not implemented in 0.1.11, so revisions have to be polled.
 
 ## How it was recovered
 

@@ -57,6 +57,9 @@ The broker rejects a request when **any** of these is true (answer `401 {"error"
 * the `Host` header is not exactly `127.0.0.1:<port>`,
 * the bearer token does not match the expected secret (constant-time compare).
 
+All three were confirmed live (`Origin` sent -> 401, `Host: localhost:<port>`
+-> 401, wrong token -> 401).
+
 ## 4. Request envelope
 
 ```jsonc
@@ -74,6 +77,10 @@ The broker rejects a request when **any** of these is true (answer `401 {"error"
 Any other top-level key is rejected with `INVALID_INPUT`.
 `id` is the idempotency key: reusing it with different arguments yields
 `ID_CONFLICT`.
+
+Verified live: a body with `"version": 2` comes back as
+`{"version":1,"id":"…","ok":false,"error":{"code":"INVALID_INPUT","message":"Use the version-1 Vector Studio protocol."}}`,
+and a body larger than 1 MiB is rejected with `413 {"error":"Request exceeds 1 MiB."}`.
 
 ## 5. Response envelope
 
@@ -113,12 +120,22 @@ app restart and protects against a client retrying after a timeout.
 renderer. A stale value is rejected; the caller is expected to re-`inspect`
 and retry with the fresh revision.
 
-## 8. Event stream
+## 8. Event stream (not served by 0.1.11)
 
-`GET /api/v1/automation/events` is a long-lived `HTTP/1.0` response with
-`Connection: close` that streams newline-delimited JSON events (document
-revisions, session changes). The shipped CLI subscribes to it to keep its
-`--revision` value fresh.
+The shipped CLI contains a request for `GET /api/v1/automation/events`
+(`HTTP/1.0`, bearer auth), but Vector Studio 0.1.11 does **not** implement that
+route: the broker only handles `POST /api/v1/automation/rpc` and answers
+everything else with `404 {"error":"Not found"}`.
+
+Verified live against 0.1.11:
+
+| Request | Result |
+|---|---|
+| `GET /api/v1/automation/events` | `404 {"error":"Not found"}` |
+| `GET /api/v1/automation/rpc` | `404 {"error":"Not found"}` (the route is POST-only) |
+
+So document revisions have to be polled: call `inspect` (or `session.list`) and
+read `revision` from the response before sending the next `expectedRevision`.
 
 ## 9. MCP bridge
 

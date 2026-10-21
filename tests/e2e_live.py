@@ -12,8 +12,10 @@ open-source MCP bridge (initialize, tools/list, tools/call).
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,6 +52,29 @@ def rpc_checks() -> bool:
         ok = check("unknown operation raises", False) and ok
     except VectorStudioError as exc:
         ok = check("unknown operation raises", exc.code == "UNKNOWN_OPERATION", exc.code or "") and ok
+
+    try:
+        list(client.events())
+        ok = check("event stream is reported as unsupported", False) and ok
+    except VectorStudioError as exc:
+        ok = check(
+            "event stream is reported as unsupported",
+            exc.code == "EVENTS_UNSUPPORTED",
+            exc.code or "",
+        ) and ok
+
+    bare_home = Path(tempfile.mkdtemp(prefix="vector-no-cred-"))
+    try:
+        # runtime present, credential missing -> the credential error is the one raised
+        shutil.copy(Path(client.home) / "runtime.json", bare_home / "runtime.json")
+        VectorStudio(home=bare_home).rpc("capabilities")
+        ok = check("missing credential raises", False) and ok
+    except VectorStudioError as exc:
+        ok = check(
+            "missing credential raises", "credential" in exc.message.lower(), exc.message[:60]
+        ) and ok
+    finally:
+        shutil.rmtree(bare_home, ignore_errors=True)
 
     return ok
 
