@@ -1,0 +1,600 @@
+{
+  "protocolVersion": 1,
+  "source": "live broker",
+  "operations": [
+    {
+      "id": "session.list",
+      "title": "List open documents",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "session.show",
+      "title": "Show Vector Studio",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "inspect",
+      "title": "Inspect the active document, selection and compatibility",
+      "document": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "render",
+      "title": "Preview the active document; requires artwork export access",
+      "document": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "edge": {
+            "type": "integer",
+            "minimum": 64,
+            "maximum": 2048
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "selection.set",
+      "title": "Select objects in the active document",
+      "document": true,
+      "revision": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 1000
+          }
+        },
+        "required": [
+          "ids"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "shape.create",
+      "title": "Create an editable shape in the active layer",
+      "document": true,
+      "revision": true,
+      "inputSchema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "rectangle"
+              },
+              "arguments": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "width": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "paint": {
+                    "type": "object",
+                    "properties": {
+                      "fill": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "stroke": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "strokeWidth": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "fill",
+                      "stroke",
+                      "strokeWidth"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height",
+                  "paint"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "arguments"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "ellipse"
+              },
+              "arguments": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "width": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "paint": {
+                    "type": "object",
+                    "properties": {
+                      "fill": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "stroke": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "strokeWidth": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "fill",
+                      "stroke",
+                      "strokeWidth"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height",
+                  "paint"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "arguments"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "line"
+              },
+              "arguments": {
+                "type": "object",
+                "properties": {
+                  "x1": {
+                    "type": "number"
+                  },
+                  "y1": {
+                    "type": "number"
+                  },
+                  "x2": {
+                    "type": "number"
+                  },
+                  "y2": {
+                    "type": "number"
+                  },
+                  "paint": {
+                    "type": "object",
+                    "properties": {
+                      "fill": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "stroke": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "strokeWidth": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "fill",
+                      "stroke",
+                      "strokeWidth"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "x1",
+                  "y1",
+                  "x2",
+                  "y2",
+                  "paint"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "arguments"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "polygon"
+              },
+              "arguments": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "radius": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "sides": {
+                    "type": "integer",
+                    "minimum": 3,
+                    "maximum": 1000
+                  },
+                  "rotationRadians": {
+                    "type": "number"
+                  },
+                  "paint": {
+                    "type": "object",
+                    "properties": {
+                      "fill": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "stroke": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "strokeWidth": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "fill",
+                      "stroke",
+                      "strokeWidth"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "radius",
+                  "sides",
+                  "rotationRadians",
+                  "paint"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "arguments"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "star"
+              },
+              "arguments": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "radius1": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "radius2": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "points": {
+                    "type": "integer",
+                    "minimum": 2,
+                    "maximum": 500
+                  },
+                  "rotationRadians": {
+                    "type": "number"
+                  },
+                  "paint": {
+                    "type": "object",
+                    "properties": {
+                      "fill": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "stroke": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "strokeWidth": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "fill",
+                      "stroke",
+                      "strokeWidth"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "radius1",
+                  "radius2",
+                  "points",
+                  "rotationRadians",
+                  "paint"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "arguments"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "undo",
+      "title": "Undo one artwork edit",
+      "document": true,
+      "revision": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "redo",
+      "title": "Redo one artwork edit",
+      "document": true,
+      "revision": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "integrations.list",
+      "title": "List local agent connections",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "projectPath": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "integrations.install",
+      "title": "install an agent connection",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "agent": {
+            "type": "string"
+          },
+          "projectPath": {
+            "type": "string"
+          },
+          "custom": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "agent"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "integrations.remove",
+      "title": "remove an agent connection",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "agent": {
+            "type": "string"
+          },
+          "projectPath": {
+            "type": "string"
+          },
+          "custom": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "agent"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "integrations.test",
+      "title": "test an agent connection",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "agent": {
+            "type": "string"
+          },
+          "projectPath": {
+            "type": "string"
+          },
+          "custom": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "agent"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "skills.list",
+      "title": "List local workflow packs",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "skills.import",
+      "title": "Import a workflow pack",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "skills.export",
+      "title": "Export a workflow pack to a new folder",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "path"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "skills.remove",
+      "title": "Remove an imported workflow pack",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
